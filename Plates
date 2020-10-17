@@ -1,0 +1,48 @@
+/*
+0) For test-case t, get 
+    0.1) Get N,K,P
+    0.2) Ki
+1) Construct a 2 D array with stacks on the rows and plates on the columns
+2) Every element (i,j) tells us the maximum beauty we can get if we are allowed to take j plates across i rows
+3) At the end, our answer is dp[N][P]
+
+To find beauty value of (i,j), we need max of
+dp(i-1,x) + sum(i,j-x) where x from 0 to j
+*/
+
+#include<bits/stdc++.h>
+using namespace std;
+int main()
+{
+    int t;
+    cin>>t;
+    for(int i=1;i<=t;t++)
+    {
+        int n,k,p;
+        cin>>n>>k>>p;
+        vector<vector<int>> a(n,vector<int>(k+1,0));
+        for(int i=0;i<n;i++)
+        {
+            for(int j=1;j<=k;j++)
+            {
+                int temp;
+                cin>>temp;
+                a[i][j] = a[i][j-1] + temp;
+            }
+        }
+        
+        vector<vector<int>> dp(n+1,vector<int>(p+1,0));
+        for(int i=1;i<=n;i++)
+        {
+            for(int j=1;j<=p;j++)
+            {
+                for(int x=0;x<=min(j,k);x++)
+                {
+                    if(dp[i-1][j-x]+a[i-1][x]>dp[i][j])
+                        dp[i][j] = dp[i-1][j-x]+a[i-1][x];
+                }
+            }
+        }
+        cout<<"Case #"<<t<<": "<<dp[n][p]<<endl;
+    }
+}
